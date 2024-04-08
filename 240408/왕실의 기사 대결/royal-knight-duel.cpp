@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+
 using namespace std;
 
 void input();
@@ -25,14 +27,13 @@ int main() {
         move(commands[i]);
 
     //데미지 계산
-    int solution = 0;
+    long long solution = 0;
     for(int i=1; i<=N; i++){
-        if(knights[i][4]<=0)
-            continue;
-        solution += bef_lifes[i] - knights[i][4];
+        if(knights[i][4]>0)
+            solution += bef_lifes[i] - knights[i][4];
     }
+    
     cout << solution;
-
     return 0;
 }
 
@@ -72,44 +73,6 @@ void input(){
 }
 
 bool isCanMove(int number, int& direction){
-    bool result = true;
-    is_moved[number] = true;
-
-    int currentR = knights[number][0]+directions[direction][0];
-    int currentC = knights[number][1]+directions[direction][1];
-    int currentH = knights[number][2];
-    int currentW = knights[number][3];
-    knights_temps[number][0] = currentR;
-    knights_temps[number][1] = currentC;
-
-    if(currentR <= 0 || currentR + currentH -1>L || currentC <= 0 || currentC + currentW -1>L)
-        return false;
-
-    for(int i=currentR; i<currentR+currentH; i++){
-        for(int j=currentC; j<currentC+currentW; j++){
-            if(chessboard[i][j]==1)
-                damage[number]+=1; 
-            if(chessboard[i][j]==2)
-                return false;
-        }
-    }
-    
-    for(int i=1; i<=N; i++){
-        if(is_moved[i] || knights[i][4]<=0)
-            continue;
-        if(knights[i][0]>currentR+currentH-1 || currentR>knights[i][0]+knights[i][2]-1)
-            continue;
-        if(knights[i][1]>currentC+currentW-1 || currentC>knights[i][1]+knights[i][3]-1)
-            continue;
-        result = isCanMove(i,direction);
-    }
-    return result;
-}
-
-void move(vector<int>& command){
-    if(knights[command[0]][4]<=0)
-        return;
-
     //초기화
     for(int i=1; i<=N; i++){
         is_moved[i] = false;
@@ -117,9 +80,52 @@ void move(vector<int>& command){
         knights_temps[i][0] = knights[i][0];
         knights_temps[i][1] = knights[i][1];
     }
+    queue<int> q;
+    q.push(number);
+    is_moved[number] = true;
+
+    while(!q.empty()){
+        int currentR = knights[number][0]+directions[direction][0];
+        int currentC = knights[number][1]+directions[direction][1];
+        int currentH = knights[number][2];
+        int currentW = knights[number][3];
+        knights_temps[number][0] = currentR;
+        knights_temps[number][1] = currentC;
+
+        if(currentR <= 0 || currentR + currentH -1>L || currentC <= 0 || currentC + currentW -1>L)
+            return false;
+
+        for(int i=currentR; i<currentR+currentH; i++){
+            for(int j=currentC; j<currentC+currentW; j++){
+                if(chessboard[i][j]==1)
+                    damage[number]+=1; 
+                if(chessboard[i][j]==2)
+                    return false;
+            }
+        }
+        
+        for(int i=1; i<=N; i++){
+            if(is_moved[i] || knights[i][4]<=0)
+                continue;
+            if(knights[i][0]>currentR+currentH-1 || currentR>knights[i][0]+knights[i][2]-1)
+                continue;
+            if(knights[i][1]>currentC+currentW-1 || currentC>knights[i][1]+knights[i][3]-1)
+                continue;
+
+            is_moved[i]=true;
+            q.push(i);
+        }
+    }
+
+    damage[commands[number][0]] = 0;
+    return true;
+}
+
+void move(vector<int>& command){
+    if(knights[command[0]][4]<=0)
+        return;
 
     if(isCanMove(command[0],command[1])){
-        damage[command[0]] = 0;
         for(int i=1; i<=N; i++){
             knights[i][0] = knights_temps[i][0];
             knights[i][1] = knights_temps[i][1];
