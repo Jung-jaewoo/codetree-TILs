@@ -99,7 +99,7 @@ bool isCanMove(int number, int& direction){
             continue;
         if(knights[i][0]>currentR+currentH-1 || currentR>knights[i][0]+knights[i][2]-1)
             continue;
-        if(knights[i][1]>currentC+currentW-1 || currentW>knights[i][1]+knights[i][3]-1)
+        if(knights[i][1]>currentC+currentW-1 || currentC>knights[i][1]+knights[i][3]-1)
             continue;
         result = isCanMove(i,direction);
     }
