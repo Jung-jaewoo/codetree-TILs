@@ -83,14 +83,15 @@ bool isCanMove(int number, int& direction){
     queue<int> q;
     q.push(number);
     is_moved[number] = true;
-
+    
     while(!q.empty()){
-        int currentR = knights[number][0]+directions[direction][0];
-        int currentC = knights[number][1]+directions[direction][1];
-        int currentH = knights[number][2];
-        int currentW = knights[number][3];
-        knights_temps[number][0] = currentR;
-        knights_temps[number][1] = currentC;
+        int x = q.front(); q.pop();
+        int currentR = knights[x][0]+directions[direction][0];
+        int currentC = knights[x][1]+directions[direction][1];
+        int currentH = knights[x][2];
+        int currentW = knights[x][3];
+        knights_temps[x][0] = currentR;
+        knights_temps[x][1] = currentC;
 
         if(currentR <= 0 || currentR + currentH -1>L || currentC <= 0 || currentC + currentW -1>L)
             return false;
@@ -98,7 +99,7 @@ bool isCanMove(int number, int& direction){
         for(int i=currentR; i<currentR+currentH; i++){
             for(int j=currentC; j<currentC+currentW; j++){
                 if(chessboard[i][j]==1)
-                    damage[number]+=1; 
+                    damage[x]+=1; 
                 if(chessboard[i][j]==2)
                     return false;
             }
@@ -117,7 +118,7 @@ bool isCanMove(int number, int& direction){
         }
     }
 
-    damage[commands[number][0]] = 0;
+    damage[number] = 0;
     return true;
 }
 
