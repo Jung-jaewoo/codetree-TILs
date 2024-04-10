@@ -27,7 +27,7 @@ int main() {
         for(int i=1; i<=M; i++){
             // cout << "0" << M << K << " ";
             MovePerson(i);
-            // cout << "1" << M << K << i << " " << per_posi[i][0] << per_posi[i][1]  <<"\n";
+            // cout << i << " " << per_posi[i][0] << per_posi[i][1]  <<"\n";
         }
         int is_all_escaped = true;
         for(int i=1; i<=M; i++){
@@ -37,6 +37,7 @@ int main() {
         if(is_all_escaped) break;
         RotateSquare();
         // cout << "(";
+        // cout << " " << ex_x << ex_y;
         // for(int i=1; i<=M; i++){
         //         cout << " " << per_posi[i][0] << per_posi[i][1] << per_exit[i]<< " ";
         //     }
@@ -85,6 +86,9 @@ void MovePerson(int idx){
             per_posi[idx][0] = nx;
             per_posi[idx][1] = ny;
             total_dist++;
+            if(GetDist(idx)==0) per_exit[idx] = true;
+            // if(nx==ex_x && ny == ex_y) per_exit[idx] = true;
+            return;
         }
     }
 
@@ -99,6 +103,9 @@ void MovePerson(int idx){
             per_posi[idx][0] = nx;
             per_posi[idx][1] = ny;
             total_dist++;
+            if(GetDist(idx)==0) per_exit[idx] = true;
+            // if(nx==ex_x && ny == ex_y) per_exit[idx] = true;
+            return;
         }
     }
 
@@ -125,8 +132,8 @@ void MovePerson(int idx){
 
     //탈출체크
     // cout << "Dist" << GetDist(idx) << " ";
-    if(GetDist(idx)==0)
-        per_exit[idx] = true;
+    // if(GetDist(idx)==0)
+    //     per_exit[idx] = true;
 }
 
 bool CheckBox(int x, int y, int sqr_n){
