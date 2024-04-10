@@ -30,11 +30,11 @@ int main() {
             // cout << i << " " << per_posi[i][0] << per_posi[i][1]  <<"\n";
         }
         int is_all_escaped = true;
-        for(int i=1; i<=M; i++){
-            if(per_exit[i]==0)
-                is_all_escaped=false;
-        }
-        if(is_all_escaped) break;
+        // for(int i=1; i<=M; i++){
+        //     if(per_exit[i]==0)
+        //         is_all_escaped=false;
+        // }
+        // if(is_all_escaped) break;
         RotateSquare();
         // cout << "(";
         // cout << " " << ex_x << ex_y;
