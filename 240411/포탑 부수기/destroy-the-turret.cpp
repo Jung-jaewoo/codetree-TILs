@@ -30,30 +30,40 @@ int main() {
     Input();
 
     int attacker, obect;
-    bool all_die_flag = false;
+    int all_die_flag;
     for(R=1; R<=K; R++){
-        all_die_flag = true;
+        all_die_flag = 0;
         attacker = FindSubject();
         obect = FindObject();
+
+        //공격력 증가 및 공격 턴 업데이트
+        turrents[attacker].attack+=N+M;
+        board[turrents[attacker].x][turrents[attacker].y]+=N+M;
         turrents[attacker].last_attack = R;
+
         if(!TryLazerAtk(attacker, obect))
             MissileAtk(attacker, obect);
 
         //다 죽으면 즉시 종료
         for(int i=0; i<turrents.size(); i++){
             if(turrents[i].attack>0)
-                all_die_flag = false;
+                all_die_flag++;
         }
-        if(all_die_flag) break;
+        if(all_die_flag==1) break;
         // cout << attacker << " " << obect << "\n";
         // cout << turrents[attacker].x << turrents[attacker].y << " " << turrents[obect].x<< turrents[obect].y << " ";
-        // for(int i=1; i<=N; i++){
-        //     for(int j=1; j<=M; j++){
-        //         cout << board[i][j] << " ";
+        // if(R==74 || R== 75 || R==76|| R==77){
+        //     cout << "(" << turrents[attacker].x << turrents[attacker].y << ")";
+        //     cout << "(" << turrents[obect].x << turrents[obect].y << ") ";
+        //     cout << "*" << turrents[1].attack << "*\n";
+        //     for(int i=1; i<=N; i++){
+        //         for(int j=1; j<=M; j++){
+        //             cout << board[i][j] << " ";
+        //         }
+        //         cout << "\n";
         //     }
         //     cout << "\n";
         // }
-        // cout << "\n";
     }
     // for(int i=1; i<=N; i++){
     //     for(int j=1; j<=M; j++){
@@ -90,8 +100,17 @@ void Input(){
 
 //공격자 찾은 후 공격자 공격력 증가
 int FindSubject(){
-    int min_idx=0;
-    for(int i=1; i<turrents.size(); i++){
+    //살아있는 포탑 첫번째 값을 min값에 초기화
+    int s_idx=0;
+    for(int i=0; i<turrents.size(); i++){
+        if(turrents[i].attack>0){
+            s_idx = i;
+            break;
+        }
+    }
+
+    int min_idx = s_idx;
+    for(int i=0; i<turrents.size(); i++){
         if(turrents[i].attack<=0)
             continue;
         if(turrents[i].attack<turrents[min_idx].attack)
@@ -109,16 +128,24 @@ int FindSubject(){
             }
         }
     }
-    turrents[min_idx].attack+=N+M;
-    board[turrents[min_idx].x][turrents[min_idx].y]+=N+M;
+    // turrents[min_idx].attack+=N+M;
+    // board[turrents[min_idx].x][turrents[min_idx].y]+=N+M;
     turrents[min_idx].last_attack=R;
     return min_idx;
 }
 
 //공격대상자 찾기
 int FindObject(){
-    int max_idx=0;
-    for(int i=1; i<turrents.size(); i++){
+    int s_idx=0;
+    for(int i=0; i<turrents.size(); i++){
+        if(turrents[i].attack>0){
+            s_idx = i;
+            break;
+        }
+    }
+
+    int max_idx=s_idx;
+    for(int i=0; i<turrents.size(); i++){
         if(turrents[i].attack<=0)
             continue;
         if(turrents[i].attack>turrents[max_idx].attack)
