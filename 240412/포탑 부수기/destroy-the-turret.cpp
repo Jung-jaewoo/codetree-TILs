@@ -27,6 +27,18 @@ int FindObject(int subject);
 bool IsCanLazerAtk(int attacker, int obect);
 bool TryLazerAtk(int attacker, int obect);
 void MissileAtk(int attacker, int obect);
+void testout(int attacker, int obect){
+    cout << "(" << turrents[attacker].x << turrents[attacker].y << ")";
+    cout << "(" << turrents[obect].x << turrents[obect].y << ") ";
+    cout << "*" << turrents[attacker].attack << "*\n";
+    for(int i=1; i<=N; i++){
+        for(int j=1; j<=M; j++){
+            cout << board[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    cout << "\n";
+};
 
 int main() {
     Input();
@@ -39,8 +51,8 @@ int main() {
         obect = FindObject(attacker);
 
         //공격력 증가 및 공격 턴 업데이트
-        turrents[attacker].attack+=N+M;
-        board[turrents[attacker].x][turrents[attacker].y]+=N+M;
+        turrents[attacker].attack += N+M;
+        board[turrents[attacker].x][turrents[attacker].y] += N+M;
         turrents[attacker].last_attack = R;
 
         if(!TryLazerAtk(attacker, obect))
@@ -52,20 +64,10 @@ int main() {
                 all_die_flag++;
         }
         if(all_die_flag==1) break;
-        // cout << attacker << " " << obect << "\n";
-        // cout << turrents[attacker].x << turrents[attacker].y << " " << turrents[obect].x<< turrents[obect].y << " ";
-        // if(R==9 || R== 10 || R==11|| R==77){
-        //     cout << "(" << turrents[attacker].x << turrents[attacker].y << ")";
-        //     cout << "(" << turrents[obect].x << turrents[obect].y << ") ";
-        //     cout << "*" << turrents[attacker].attack << "*\n";
-        //     for(int i=1; i<=N; i++){
-        //         for(int j=1; j<=M; j++){
-        //             cout << board[i][j] << " ";
-        //         }
-        //         cout << "\n";
-        //     }
-        //     cout << "\n";
-        // }
+
+        // if(R==456 || R==457 || R== 458 )
+        //    testout(attacker,obect)
+
     }
     // for(int i=1; i<=N; i++){
     //     for(int j=1; j<=M; j++){
@@ -100,9 +102,9 @@ void Input(){
     }
 }
 
-//공격자 찾은 후 공격자 공격력 증가
+//공격자 찾기
 int FindSubject(){
-    int s_idx=0;
+    int s_idx;
     for(int i=0; i<turrents.size(); i++){
         if(turrents[i].attack>0){
             s_idx = i;
@@ -111,7 +113,7 @@ int FindSubject(){
     }
 
     int min_idx = s_idx;
-    for(int i=0; i<turrents.size(); i++){
+    for(int i=s_idx+1; i<turrents.size(); i++){
         if(turrents[i].attack<=0)
             continue;
         if(turrents[i].attack<turrents[min_idx].attack)
@@ -120,7 +122,7 @@ int FindSubject(){
             if(turrents[i].last_attack>turrents[min_idx].last_attack)
                 min_idx = i;
             else if(turrents[i].last_attack==turrents[min_idx].last_attack){
-                if(turrents[i].x+turrents[i].y>turrents[min_idx].x>turrents[min_idx].y)
+                if(turrents[i].x+turrents[i].y>turrents[min_idx].x+turrents[min_idx].y)
                     min_idx = i;
                 else if(turrents[i].x+turrents[i].y==turrents[min_idx].x+turrents[min_idx].y){
                     if(turrents[i].y>turrents[min_idx].y)
@@ -129,15 +131,13 @@ int FindSubject(){
             }
         }
     }
-    // turrents[min_idx].attack+=N+M;
-    // board[turrents[min_idx].x][turrents[min_idx].y]+=N+M;
-    // turrents[min_idx].last_attack=R;
+
     return min_idx;
 }
 
 //공격대상자 찾기
 int FindObject(int subject){
-    int s_idx=0;
+    int s_idx;
     for(int i=0; i<turrents.size(); i++){
         if(subject == i)
             continue;
@@ -148,7 +148,7 @@ int FindObject(int subject){
     }
 
     int max_idx=s_idx;
-    for(int i=0; i<turrents.size(); i++){
+    for(int i=s_idx+1; i<turrents.size(); i++){
         if(turrents[i].attack<=0 || i==subject)
             continue;
         if(turrents[i].attack>turrents[max_idx].attack)
@@ -182,12 +182,11 @@ bool IsCanLazerAtk(int attacker, int obect){
         int cur = q.front(); q.pop();
     
         for(int i=0; i<4; i++){
-            int nx = turrents[cur].x+dx[i];
-            int ny = turrents[cur].y+dy[i];
-            if(nx==0) nx = N;
-            else if(nx==N+1) nx = 1;
-            if(ny==0) ny = M;
-            else if(ny==M+1) ny = 1;
+            int nx = (turrents[cur].x+dx[i]+N-1)%N+1;
+            int ny = (turrents[cur].y+dy[i]+M-1)%M+1;
+
+            if(seq[nx][ny])
+                continue;
 
             if(board[nx][ny]>0){
                 int next_idx;
@@ -197,14 +196,14 @@ bool IsCanLazerAtk(int attacker, int obect){
                     if(turrents[i].x==nx&&turrents[i].y==ny)
                         next_idx = i;
                 }
-                if(seq[nx][ny])
-                    continue;
-
+                
                 back_x[nx][ny] = turrents[cur].x;
                 back_y[nx][ny] = turrents[cur].y;
                 seq[nx][ny] = seq[turrents[cur].x][turrents[cur].y]+1;
+
                 if(next_idx==obect)
                     return true;
+                
                 q.push(next_idx);
             }
         }
@@ -216,14 +215,16 @@ bool TryLazerAtk(int attacker, int obect){
     //lazer 공격 가능시 공격력 업데이트
     if(IsCanLazerAtk(attacker,obect)){
         int dmg = turrents[attacker].attack;
-        board[turrents[obect].x][turrents[obect].y]-=dmg;
+        board[turrents[obect].x][turrents[obect].y] -= dmg;
+        turrents[obect].attack -= dmg;
+
         int cx = turrents[obect].x;
         int cy = turrents[obect].y;
-        bool flag = true;
+
         //board만 업데이트
         int nx = back_x[cx][cy];
         int ny = back_y[cx][cy];
-        while(!(nx==turrents[attacker].x&&ny==turrents[attacker].y)){
+        while(!(nx==turrents[attacker].x && ny==turrents[attacker].y)){
             board[nx][ny] -= dmg/2;
             int next_cx = nx;
             int next_cy = ny;
@@ -234,16 +235,14 @@ bool TryLazerAtk(int attacker, int obect){
         //turrent배열값에서 업데이트
         for(int i=0; i<turrents.size(); i++){
             //살아남은 애들 +1, 맞은애들 데미지 업데이트
-            if(i==attacker) continue;
-            if(turrents[i].attack == board[turrents[i].x][turrents[i].y] && turrents[i].attack>0){
+            if(i==attacker || i== obect || turrents[i].attack<=0) continue;
+            if(turrents[i].attack == board[turrents[i].x][turrents[i].y]){
                 board[turrents[i].x][turrents[i].y] += 1;
                 turrents[i].attack += 1;
             }
-            else if(turrents[i].attack != board[turrents[i].x][turrents[i].y]){
+            else
                 turrents[i].attack = board[turrents[i].x][turrents[i].y];
-            }
         }
-
         return true;    
     }
     return false;
@@ -275,13 +274,12 @@ void MissileAtk(int attacker, int obect){
     //turrent배열값에서 업데이트
     for(int i=0; i<turrents.size(); i++){
         //살아남은 애들 +1, 맞은애들 데미지 업데이트
-        if(i==attacker) continue;
-        if(turrents[i].attack == board[turrents[i].x][turrents[i].y] && turrents[i].attack>0){
+        if(i==attacker || turrents[i].attack<=0) continue;
+        if(turrents[i].attack == board[turrents[i].x][turrents[i].y]){
             board[turrents[i].x][turrents[i].y] += 1;
             turrents[i].attack += 1;
         }
-        else if(turrents[i].attack != board[turrents[i].x][turrents[i].y]){
+        else
             turrents[i].attack = board[turrents[i].x][turrents[i].y];
-        }
     }
 }
