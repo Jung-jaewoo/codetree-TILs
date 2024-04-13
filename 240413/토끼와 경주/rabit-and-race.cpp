@@ -10,7 +10,7 @@ struct Rabbit{
     int pid;
     int dist;
     int count = 0;
-    int score = 0;
+    long long score = 0;
 
     bool operator <(const Rabbit &b) const {
         if(count != b.count) return count > b.count;
@@ -21,7 +21,7 @@ struct Rabbit{
     }
 };
 
-int Q, N, M, P, K, S, L;
+int Q, N, M, P, K, S, L, total_sum;
 Rabbit rabbits[2001];
 bool is_selected[2001];
 map<int, int> id_to_idx;
@@ -65,11 +65,10 @@ void Input(){
             ChangeDist(pid_t);
             break;
         case 400:
-            int max = 0;
+            long long ans = 0;
             for(int i=1; i<=P; i++)
-                if(rabbits[i].score>max)
-                    max = rabbits[i].score;
-            cout << max;
+                ans = max(ans, rabbits[i].score + total_sum) ;
+            cout << ans;
             break;
     }
 }
@@ -136,19 +135,17 @@ void StartRace(){
         next_rabbit.x = max_x;
         next_rabbit.y = max_y;
         next_rabbit.count++;
+        next_rabbit.score -= max_x + max_y;
         rabbit_pq.push(next_rabbit);
 
         rabbits[id_to_idx[next_rabbit.pid]].x = max_x;
         rabbits[id_to_idx[next_rabbit.pid]].y = max_y;
         rabbits[id_to_idx[next_rabbit.pid]].count++;
-
+        rabbits[id_to_idx[next_rabbit.pid]].score -= max_x + max_y;
         is_selected[id_to_idx[next_rabbit.pid]] = true;
 
-        for(int i=1; i<=P; i++){
-            if(i == id_to_idx[next_rabbit.pid])
-                continue;
-            rabbits[i].score += max_x + max_y;
-        }
+        total_sum += max_x + max_y;
+        
         // for(int i=1; i<=P; i++){                                //cout
         //     cout <<rabbits[i].score<< " ";
         // }
