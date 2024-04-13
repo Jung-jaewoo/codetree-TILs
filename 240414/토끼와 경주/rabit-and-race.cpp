@@ -235,8 +235,9 @@ void AddS(){
         }
     }
     for(int i=max_idx+1; i<=P; i++){
-        if(Cmp(rabbits[max_idx],rabbits[i]))
-            max_idx = i;
+        if(is_selected[i])
+            if(Cmp(rabbits[max_idx],rabbits[i]))
+                max_idx = i;
     }
 
     //뽑힌 토끼 없을때
@@ -247,8 +248,6 @@ void AddS(){
 }
 
 void ChangeDist(int pid_t){
-    for(int i=1; i<=P; i++){
-        if(rabbits[i].pid == pid_t)
-            rabbits[i].dist *= L;
-    }
+    int idx = id_to_idx[pid_t];
+    rabbits[idx].dist *= L;
 }
