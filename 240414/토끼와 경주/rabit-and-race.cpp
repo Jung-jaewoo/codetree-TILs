@@ -21,7 +21,8 @@ struct Rabbit{
     }
 };
 
-int Q, N, M, P, K, S, L, total_sum;
+int Q, N, M, P, K, S, L;
+long long total_sum;
 Rabbit rabbits[2001];
 bool is_selected[2001];
 map<int, int> id_to_idx;
