@@ -130,9 +130,41 @@ void StartRace(){
     // cout << "\n";
 }
 
+bool Cmp(Rabbit a, Rabbit b){
+    if(a.x + a.y != b.x + b.y) return a.x + a.y < b.x + b.y;
+    if(a.x != b.x) return a.x < b.x;
+    if(a.y != b.y) return a.y < b.y;
+    return a.pid < b.pid;
+}
+
 void AddS(){
 
     //우선순위 높은 토끼 찾기
+    // int max_idx = P + 1;
+    // for(int i=1; i<=P; i++){
+    //     if(is_selected[i]){
+    //         max_idx = i;
+    //         break;
+    //     }
+    // }
+    // for(int i=max_idx+1; i<=P; i++){
+    //     if(is_selected[i]){
+    //         if(rabbits[i].x + rabbits[i].y > rabbits[max_idx].x + rabbits[max_idx].y)
+    //             max_idx = i;
+    //         else if(rabbits[i].x + rabbits[i].y == rabbits[max_idx].x + rabbits[max_idx].y){
+    //             if(rabbits[i].x > rabbits[max_idx].x)
+    //                 max_idx = i;
+    //             else if(rabbits[i].x == rabbits[max_idx].x){
+    //                 if(rabbits[i].y > rabbits[max_idx].y)
+    //                     max_idx = i;
+    //                 else if(rabbits[i].y == rabbits[max_idx].y){
+    //                     if(rabbits[i].pid > rabbits[max_idx].pid)
+    //                         max_idx = i;
+    //                 }  
+    //             }   
+    //         }
+    //     }   
+    // }
     int max_idx = P + 1;
     for(int i=1; i<=P; i++){
         if(is_selected[i]){
@@ -141,22 +173,8 @@ void AddS(){
         }
     }
     for(int i=max_idx+1; i<=P; i++){
-        if(is_selected[i]){
-            if(rabbits[i].x + rabbits[i].y > rabbits[max_idx].x + rabbits[max_idx].y)
-                max_idx = i;
-            else if(rabbits[i].x + rabbits[i].y == rabbits[max_idx].x + rabbits[max_idx].y){
-                if(rabbits[i].x > rabbits[max_idx].x)
-                    max_idx = i;
-                else if(rabbits[i].x == rabbits[max_idx].x){
-                    if(rabbits[i].y > rabbits[max_idx].y)
-                        max_idx = i;
-                    else if(rabbits[i].y > rabbits[max_idx].y){
-                        if(rabbits[i].pid > rabbits[max_idx].pid)
-                            max_idx = i;
-                    }  
-                }   
-            }
-        }   
+        if(Cmp(rabbits[max_idx],rabbits[i]))
+            max_idx = i;
     }
 
     //뽑힌 토끼 없을때
