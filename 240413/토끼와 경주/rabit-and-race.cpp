@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#define fastio ios::sync_with_stdio(0) cout.tie(0) cin.tie(0)
 using namespace std;
 
 struct Rabbit{
@@ -22,6 +23,7 @@ void ChangeDist(int pid_t);
 
 
 int main() {
+    fastio;
     cin >> Q;
     while(Q--){
         Input();
