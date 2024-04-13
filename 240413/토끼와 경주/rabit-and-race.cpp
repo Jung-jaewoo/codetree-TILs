@@ -101,19 +101,32 @@ void StartRace(){
     while(K--){
         Rabbit next_rabbit = rabbit_pq.top(); rabbit_pq.pop();
         //이동할 방향 선택
-        int max_x=0, max_y=0, nx, ny, cx=next_rabbit.x, cy=next_rabbit.y, d=next_rabbit.dist;
+        int max_x=0, max_y=0, nx, ny, ndx, ndy, cx=next_rabbit.x, cy=next_rabbit.y, d=next_rabbit.dist;
         // cout << id_to_idx[next_rabbit.pid] << " ";                      //cout
         for(int i=0; i<4; i++){
             nx = cx;
             ny = cy;
             int dir = i;
-            for(int j=0; j<d; j++){
-                if(nx+dx[dir]==0 || nx+dx[dir]==N+1 || ny+dy[dir]==0 || ny+dy[dir]==M+1)
+
+            ndx = d % ((N-2)*2+2);
+            ndy = d % ((M-2)*2+2);
+            for(int j=0; j<ndx; j++){
+                if(nx+dx[dir]==0 || nx+dx[dir]==N+1)
                     dir = (dir + 2) % 4;
                 nx += dx[dir];
+            }
+            for(int j=0; j<ndy; j++){
+                if(ny+dy[dir]==0 || ny+dy[dir]==M+1)
+                    dir = (dir + 2) % 4;
                 ny += dy[dir];
             }
-            
+            // for(int j=0; j<d; j++){
+            //     if(nx+dx[dir]==0 || nx+dx[dir]==N+1 || ny+dy[dir]==0 || ny+dy[dir]==M+1)
+            //         dir = (dir + 2) % 4;
+            //     nx += dx[dir];
+            //     ny += dy[dir];
+            // }
+             
             // 우선순위 큰값 업데이트
             if(nx + ny > max_x + max_y){
                 max_x = nx; 
