@@ -42,6 +42,7 @@ int main() {
     
     while(K--){
         score = choosePointAndRotate();
+        if(score == 0) break;
         while(1){
             // print();
             // cout<< "("<< score<< ")";
