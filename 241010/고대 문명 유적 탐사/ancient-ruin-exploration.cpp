@@ -43,6 +43,8 @@ int main() {
     while(K--){
         score = choosePointAndRotate();
         while(1){
+            // print();
+            // cout<< "("<< score<< ")";
             supplyTreasure();
             // print();
             addition = getScore();
@@ -51,6 +53,7 @@ int main() {
         }
         if(score!=0)
             cout << score << " ";
+        // cout << "\n";
     }
 
     return 0;
@@ -169,7 +172,8 @@ int choosePointAndRotate(){
             }
         }
     }
-    rotateMap(max_point.first, max_point.second);
+    for(int i=0; i<max_angle+1; i++)
+        rotateMap(max_point.first, max_point.second);
     return max_value;
 }
 
