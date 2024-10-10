@@ -44,6 +44,7 @@ int main() {
         score = choosePointAndRotate();
         while(1){
             supplyTreasure();
+            // print();
             addition = getScore();
             if(addition==0) break;
             score += addition;
